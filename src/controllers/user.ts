@@ -3,9 +3,8 @@ import { validationResult } from "express-validator";
 import bcrypt from "bcryptjs";
 import { PrismaClient } from "@prisma/client";
 
-import { User } from "../models/user";
+import { signAccessToken } from "../utils/jwt";
 
-let users: User[] = [];
 const prisma = new PrismaClient();
 
 export const registerController = async (req: Request, res: Response) => {
@@ -28,18 +27,39 @@ export const registerController = async (req: Request, res: Response) => {
   res.status(201).json({ id: user.id, username, name });
 };
 
-export const loginController = (req: Request, res: Response) => {
+export const loginController = async (req: Request, res: Response) => {
   // call controller
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array()[0].msg });
+    return res.status(400).json({ error: errors.array()[0].msg });
   }
 
-  const user: User = {
-    username: req.body.username,
-    password: req.body.password,
-  };
+  const { username, password } = req.body;
+  const user = await prisma.user.findUnique({
+    where: {
+      username,
+    },
+  });
 
-  users.push(user);
-  res.status(201).json(user);
+  if (!user) {
+    return res.status(401).json({
+      error: "username or password is wrong",
+    });
+  }
+
+  const checkPassword = bcrypt.compareSync(password, user.password);
+
+  if (!checkPassword) {
+    return res.status(401).json({
+      error: "username or password is wrong",
+    });
+  }
+
+  const accessToken = await signAccessToken({ username, name: user.name });
+
+  res.status(200).json({
+    username,
+    name: user.name,
+    token: accessToken,
+  });
 };
