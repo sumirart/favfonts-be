@@ -1,14 +1,14 @@
 import express, { NextFunction, Request, Response } from "express";
 
-// users routes
 import userRoutes from "./routes/user";
-// fonts routes
+import fontRoutes from "./routes/fonts";
 
 const app = express();
 const port = process.env.PORT ?? 3000;
 
 app.use(express.json());
 app.use("/auth", userRoutes);
+app.use("/fonts", fontRoutes);
 
 app.get("/", (req: Request, res: Response) => {
   res.send("Hello!");
