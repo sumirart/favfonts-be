@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for favfonts on 2023-09-26T18:20:11+07:00
+# fly.toml app configuration file generated for favfonts-be on 2023-09-26T22:53:09+07:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "favfonts"
+app = "favfonts-be"
 primary_region = "sin"
 
 [build]

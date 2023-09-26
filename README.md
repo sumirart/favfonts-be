@@ -17,6 +17,12 @@ This is a backend repository for Favorite Fonts app, an app for Chingu Voyage 46
 - Copy `.env.example` to `.env` and fill in the information required
 - Run `npm start`
 
+## API List
+
+- `/auth/register` to register by sending `username`, `password`, and `name` through body
+- `/auth/login` to login by sending `username` and `password` through body
+- `/fonts/all` to get list of fonts, must have `token` in the header
+
 ## Dependencies
 
 - [Prisma](https://www.npmjs.com/package/prisma)
